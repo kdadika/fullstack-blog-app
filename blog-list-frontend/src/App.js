@@ -5,6 +5,7 @@ import LoginForm from "./components/LoginForm";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -45,6 +46,7 @@ const App = () => {
   }, []);
 
   const handleLogin = async (e) => {
+    e.preventDefault();
     try {
       const user = await loginService.login({
         username,
@@ -156,9 +158,18 @@ const App = () => {
     <div>
       <h1 className="header-title">blogs</h1>
       <Notification message={message} />
-      {user === null ? (
-        <LoginForm handleLogin={handleLogin} />
-      ) : (
+      {!user && (
+        <Togglable buttonLabel="Login">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+        </Togglable>
+      )}
+      {user && (
         <div>
           <p>
             <span className="active-user">{user.name}</span> logged in{" "}
@@ -166,14 +177,14 @@ const App = () => {
               logout
             </button>
           </p>
-          {blogForm()}
-          <div>
-            {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} />
-            ))}
-          </div>
+          <Togglable buttonLabel="New Blog">{blogForm()}</Togglable>
         </div>
       )}
+      <div>
+        {blogs.map((blog) => (
+          <Blog key={blog.id} blog={blog} />
+        ))}
+      </div>
     </div>
   );
 };

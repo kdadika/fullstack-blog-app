@@ -5,12 +5,6 @@ const LoginForm = ({
   username,
   password,
 }) => {
-  //   const onSubmit = (e) => {
-  //     e.preventDefault();
-  //     handleLogin(username, password);
-  //     setUsername("");
-  //     setPassword("");
-  //   };
   return (
     <div>
       <h2>Log in to application</h2>

@@ -1,16 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
-import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
+import Notification from "./components/Notification";
 import BlogForm from "./BlogForm";
+import Togglable from "./components/Togglable";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import Togglable from "./components/Togglable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  // const [showAll, setShowAll] = useState(true);
   const [message, setMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -94,11 +93,23 @@ const App = () => {
     }
   };
 
+  const deleteBlog = async (blogId) => {
+    try {
+      await blogService.remove(blogId);
+
+      const updatedBlogs = blogs.filter((blog) => blog.id !== blogId);
+      setBlogs(updatedBlogs);
+      setMessage("Blog removed");
+    } catch (exception) {
+      setMessage("error" + exception.response.data.error);
+    }
+  };
+
   return (
     <div>
-      <h1 className="header-title">blogs</h1>
+      <h1 className="header-title">Blogs</h1>
       <Notification message={message} />
-      {!user && (
+      {user === null ? (
         <Togglable buttonLabel="Login">
           <LoginForm
             username={username}
@@ -108,8 +119,7 @@ const App = () => {
             handleSubmit={handleLogin}
           />
         </Togglable>
-      )}
-      {user && (
+      ) : (
         <div>
           <p>
             <span className="active-user">{user.name}</span> logged in{" "}
@@ -117,24 +127,23 @@ const App = () => {
               logout
             </button>
           </p>
-          <Togglable buttonLabel="New Blog" ref={blogFormRef}>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <BlogForm createBlog={createBlog} />
           </Togglable>
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                updateLikes={updateLikes}
+                deleteBlog={deleteBlog}
+                username={user.username}
+              />
+            ))}
         </div>
       )}
-      <div>
-        {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            updateLikes={updateLikes}
-            // deleteBlog={deleteBlog}
-            username={user.username}
-          />
-        ))}
-      </div>
     </div>
   );
 };
-
 export default App;

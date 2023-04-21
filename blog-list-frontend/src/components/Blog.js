@@ -39,13 +39,13 @@ const Blog = ({ blog, updateLikes, deleteBlog, username }) => {
             <button id="like-btn" onClick={handleLike}>
               like
             </button>{" "}
+            <div>{blog.user.name}</div>
+            {blog.user.username === username && (
+              <button id="delete-btn" onClick={handleDelete}>
+                delete
+              </button>
+            )}
           </div>
-          <div>{blog.user.name}</div>
-          {blog.user.username === username && (
-            <button id="delete-btn" onClick={handleDelete}>
-              delete
-            </button>
-          )}
         </div>
       )}
     </div>

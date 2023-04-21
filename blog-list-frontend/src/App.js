@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
-import BlogForm from "./BlogForm";
+import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 
 import blogService from "./services/blogs";
@@ -14,6 +14,7 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -37,8 +38,6 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
-
-  const blogFormRef = useRef();
 
   const handleLogin = async (e) => {
     e.preventDefault();

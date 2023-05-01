@@ -30,7 +30,7 @@ const LoginForm = ({
           />
         </div>
         <button id="login-btn" type="submit">
-          login
+          Login
         </button>
       </form>
     </div>

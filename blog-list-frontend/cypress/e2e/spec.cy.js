@@ -52,5 +52,16 @@ describe("Blog", function () {
       cy.contains("cypress test blog").parent().contains("view").click();
       cy.get("#like-btn").click();
     });
+
+    it("A blog can be deleted", function () {
+      cy.contains("cypress test blog").parent().find("button").click();
+      cy.get("#delete-btn").click();
+    });
+
+    it("they are ordered by the number of likes in descending order", function () {
+      cy.get(".blog").eq(0).should("contain", "Best Cat Breeds");
+      cy.get(".blog").eq(1).should("contain", "Blog");
+      cy.get(".blog").eq(2).should("contain", "Bobby");
+    });
   });
 });

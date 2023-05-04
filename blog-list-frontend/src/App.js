@@ -16,10 +16,6 @@ const App = () => {
   const [user, setUser] = useState(null);
   const blogFormRef = useRef();
 
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
-
   // Clear notification after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,8 +32,14 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
       blogService.setToken(user.token);
+      getAllBlogs();
     }
   }, []);
+
+  const getAllBlogs = async () => {
+    const blogs = await blogService.getAll();
+    setBlogs(blogs);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();

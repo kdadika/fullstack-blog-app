@@ -2,19 +2,18 @@ import { useState } from "react";
 
 const Blog = ({ blog, updateLikes, deleteBlog, username }) => {
   const [visible, setVisible] = useState(false);
+  const [blogObject, setBlogObject] = useState(blog);
   const toggleVisibility = () => {
     setVisible(!visible);
   };
 
   const handleLike = () => {
     const blogToUpdate = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
+      ...blog,
       likes: blog.likes + 1,
-      user: blog.user.id,
     };
     updateLikes(blog.id, blogToUpdate);
+    setBlogObject(blogToUpdate);
   };
   const handleDelete = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
@@ -35,12 +34,14 @@ const Blog = ({ blog, updateLikes, deleteBlog, username }) => {
         <div className="blog-details">
           <div>{blog.url}</div>
           <div>
-            Likes: {blog.likes}{" "}
+            Likes: {blogObject.likes}{" "}
             <button id="like-btn" onClick={handleLike}>
               like
             </button>{" "}
-            <div>{blog.user.name}</div>
-            {blog.user.username === username && (
+          </div>
+          <div>{blogObject.user.name}</div>
+          <div>
+            {blogObject.user.username === username && (
               <button id="delete-btn" onClick={handleDelete}>
                 delete
               </button>
